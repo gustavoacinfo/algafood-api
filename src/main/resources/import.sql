@@ -12,3 +12,8 @@ insert into forma_pagamento (descricao) values ('Cartao de debito');
 insert into permissao (nome, descricao) values ('Consultar Restaurante', 'Permite ao Usuário acesso a lista de Restaurantes');
 insert into permissao (nome, descricao) values ('Consultar Cozinha', 'Permite ao Usuário acesso a lista de Cozinhas');
 insert into permissao (nome, descricao) values ('Consultar Pedido', 'Permite ao Usuário acesso a lista de Pedidos');
+
+insert into estado (id, nome) values (1, 'Minas Gerais');
+insert into estado (id, nome) values (2, 'São Paulo');
+insert into estado (id, nome) values (3, 'Goias');
+insert into estado (id, nome) values (4, 'Bahia');
