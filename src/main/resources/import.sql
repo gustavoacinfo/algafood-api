@@ -17,3 +17,10 @@ insert into estado (id, nome) values (1, 'Minas Gerais');
 insert into estado (id, nome) values (2, 'São Paulo');
 insert into estado (id, nome) values (3, 'Goias');
 insert into estado (id, nome) values (4, 'Bahia');
+
+insert into cidade (nome, estado_id) values ('Unaí',1);
+insert into cidade (nome, estado_id) values ('Paracatu',1);
+insert into cidade (nome, estado_id) values ('Campinas',2);
+insert into cidade (nome, estado_id) values ('Franca',2);
+insert into cidade (nome, estado_id) values ('Goiania',3);
+insert into cidade (nome, estado_id) values ('Porto Seguro',4);
