@@ -38,6 +38,17 @@ public class CidadeController {
 		return cidadeRepository.listar();
 	}
 	
+	@GetMapping("/{cidadeId}")
+	public ResponseEntity<Cidade> buscar(@PathVariable Long cidadeId) {
+		Cidade cidade = cidadeRepository.buscar(cidadeId);
+		
+		if(cidade != null) {
+			return ResponseEntity.ok(cidade);
+		}
+	
+		return ResponseEntity.notFound().build();
+	}
+	
 	@PostMapping
 	public ResponseEntity<?> adicionar(@RequestBody Cidade cidade){
 		try {
@@ -81,6 +92,8 @@ public class CidadeController {
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 			
+		} catch (EntidadeEmUsoException e) {
+			return ResponseEntity.status(HttpStatus.CONFLICT).build();
 		}
 	}
 }
