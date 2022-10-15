@@ -69,7 +69,7 @@ public class RestauranteController {
 			@RequestBody Restaurante restaurante){
 		Optional<Restaurante> restauranteAtual = restauranteRepository.findById(restauranteId);
 		
-		if(restauranteAtual != null) {
+		if(restauranteAtual.isPresent()) {
 			
 			try {
 				BeanUtils.copyProperties(restaurante, restauranteAtual.get(), "id");
