@@ -1,6 +1,7 @@
 package com.algaworks.algafood.domain.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -43,6 +44,6 @@ public class Usuario {
 	@JoinTable(name = "usuario_grupo",
 			joinColumns = @JoinColumn(name = "usuario_id"),
 			inverseJoinColumns = @JoinColumn(name = "grupo_id"))
-	private List<Grupo> grupos;
+	private List<Grupo> grupos = new ArrayList<>();
 
 }
