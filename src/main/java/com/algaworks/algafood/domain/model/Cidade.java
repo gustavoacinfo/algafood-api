@@ -27,5 +27,6 @@ public class Cidade {
 	@JoinColumn(nullable = false)
 	@ManyToOne
 	private Estado estado;
-
+	
+	
 }
