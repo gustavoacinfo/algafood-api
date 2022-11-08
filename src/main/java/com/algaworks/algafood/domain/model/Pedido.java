@@ -12,13 +12,10 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
@@ -28,7 +25,7 @@ import lombok.EqualsAndHashCode;
 @Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
-public class Restaurante {
+public class Pedido {
 	
 	@EqualsAndHashCode.Include
 	@Id
@@ -36,39 +33,48 @@ public class Restaurante {
 	private Long id;
 	
 	@Column(nullable = false)
-	private String nome;
+	private BigDecimal subTotal;
 	
-	@Column(name = "taxa_frete", nullable = false)
+	@Column(nullable = false)
 	private BigDecimal taxaFrete;
 	
-//	@JsonIgnore
-	@ManyToOne//(fetch = FetchType.LAZY)
-	@JoinColumn(nullable = false)
-	private Cozinha cozinha;
+	@Column(nullable = false)
+	private BigDecimal valorTotal;
 	
-	@JsonIgnore
-	@OneToMany(mappedBy = "restaurante")
-	private List<Produto> produtos = new ArrayList<>(); 
+	@CreationTimestamp
+	@Column(nullable = false, columnDefinition = "datetime")
+	private LocalDateTime dataCriacao;
+	
+	@Column(columnDefinition = "datetime")
+	private LocalDateTime dataConfirmacao;
+	
+	@Column(columnDefinition = "datetime")
+	private LocalDateTime dataCancelamento;
+	
+	@Column(columnDefinition = "datetime")
+	private LocalDateTime dataEntrega;
+	
+	@ManyToOne
+	@JoinColumn(nullable = false)
+	private Restaurante restaurante;
+	
+	@ManyToOne
+	@JoinColumn(nullable = false)
+	private FormaPagamento formaPagamento;
+	
+	@ManyToOne
+	@JoinColumn(name = "usuario_cliente_id", nullable = false)
+	private Usuario cliente;
 	
 	@JsonIgnore
 	@Embedded
 	private Endereco endereco;
 	
-	@JsonIgnore
-	@CreationTimestamp
-	@Column(nullable = false, columnDefinition = "datetime")
-	private LocalDateTime dataCadastro;
+	@JoinColumn(nullable = false)
+	private StatusPedido status;
 	
 	@JsonIgnore
-	@UpdateTimestamp
-	@Column(nullable = false, columnDefinition = "datetime")
-	private LocalDateTime dataAtualizacao;
-	
-	@JsonIgnore
-	@ManyToMany//(fetch = FetchType.EAGER)
-	@JoinTable(name = "restaurante_forma_pagamento",
-			joinColumns = @JoinColumn(name = "restaurante_id"),
-			inverseJoinColumns = @JoinColumn(name = "forma_pagamento_id"))
-	private List<FormaPagamento> formasPagamento = new ArrayList<>();
+	@OneToMany(mappedBy = "pedido")
+	private List<ItemPedido> itens = new ArrayList<>(); 
 
 }
