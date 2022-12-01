@@ -32,7 +32,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		if(rootCause instanceof InvalidFormatException) {
 			return handleInvalidFormatException((InvalidFormatException)rootCause, headers, status, request);
 		}else if(rootCause instanceof PropertyBindingException) {
-			System.out.println("Deu certo");
 			return handlePropertyBindingException((PropertyBindingException)rootCause, headers, status, request);
 		}
 		
@@ -44,7 +43,6 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler{
 		
 		return handleExceptionInternal(ex, problem, new HttpHeaders(), 
 				status, request);
-		
 		
 	}
 	
