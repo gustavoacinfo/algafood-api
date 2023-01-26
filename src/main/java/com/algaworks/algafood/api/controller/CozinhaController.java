@@ -56,6 +56,7 @@ public class CozinhaController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public CozinhaModel adicionar(@RequestBody @Valid CozinhaInput cozinhaInput) {
 		Cozinha cozinha = cozinhaInputDesassembler.toDomainObject(cozinhaInput);
+		
 		return cozinhaModelAssembler.toModel(cadastroCozinha.salvar(cozinha));
 	}
 	
