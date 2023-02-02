@@ -43,7 +43,9 @@ public class EstadoController {
 	
 	@GetMapping
 	public List<EstadoModel> listar(){
-		return estadoModelAssembler.toCollectionModel(estadoRepository.findAll());
+		List<Estado> todosEstados = estadoRepository.findAll();
+	    
+	    return estadoModelAssembler.toCollectionModel(todosEstados);	
 	}
 	
 	@GetMapping("/{estadoId}")

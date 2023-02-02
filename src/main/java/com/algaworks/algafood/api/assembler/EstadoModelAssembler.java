@@ -22,7 +22,7 @@ public class EstadoModelAssembler {
 	
 	public List<EstadoModel> toCollectionModel(List<Estado> estados){
 		return estados.stream()
-				.map(cozinha -> toModel(cozinha))
+				.map(estado -> toModel(estado))
 				.collect(Collectors.toList());
 	}
 
