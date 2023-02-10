@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algaworks.algafood.api.assembler.UsuarioInputDesassembler;
 import com.algaworks.algafood.api.assembler.UsuarioModelAssembler;
 import com.algaworks.algafood.api.model.UsuarioModel;
+import com.algaworks.algafood.api.model.input.SenhaInput;
 import com.algaworks.algafood.api.model.input.UsuarioComSenhaInput;
 import com.algaworks.algafood.api.model.input.UsuarioInput;
 import com.algaworks.algafood.domain.model.Usuario;
@@ -58,11 +59,13 @@ public class UsuarioController {
 	
 	@PostMapping
 	@ResponseStatus(HttpStatus.CREATED)
-	public UsuarioModel adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioComSenhaInput) {
+	public UsuarioModel adicionar(@RequestBody @Valid UsuarioComSenhaInput usuarioInput) {
 		
-		Usuario usuario = usuarioInputDesassembler.toDomainObject(usuarioComSenhaInput);
+		Usuario usuario = usuarioInputDesassembler.toDomainObject(usuarioInput);
 		
-		return usuarioModelAssembler.toModel(cadastroUsuario.salvar(usuario));
+		usuario = cadastroUsuario.salvar(usuario);
+	        
+	    return usuarioModelAssembler.toModel(usuario);
 	}
 	
 	@PutMapping("/{usuarioId}")
@@ -72,7 +75,17 @@ public class UsuarioController {
 		
 		usuarioInputDesassembler.copyToDomainObject(usuarioInput, usuarioAtual);
 		
-		return usuarioModelAssembler.toModel(cadastroUsuario.salvar(usuarioAtual));
+		usuarioAtual = cadastroUsuario.salvar(usuarioAtual);
+        
+        return usuarioModelAssembler.toModel(usuarioAtual);
+	}
+	
+	@PutMapping("/{usuarioId}/senha")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void alterarSenha(@PathVariable Long usuarioId, 
+			@RequestBody @Valid SenhaInput senha){
+		
+		 cadastroUsuario.alterarSenha(usuarioId, senha.getSenhaAtual(), senha.getNovaSenha());
 	}
 	
 
