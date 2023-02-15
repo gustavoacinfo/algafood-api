@@ -15,22 +15,14 @@ public class CadastroProdutoService {
 	@Autowired
 	private ProdutoRepository produtoRepository;
 	
-	@Autowired
-	private CadastroRestauranteService cadastroRestaurante;
-	
 	@Transactional
-	public Produto salvar(Produto produto, Long restauranteId) {
-		
-		Restaurante restaurante = cadastroRestaurante.buscarOuFalhar(restauranteId);
-		
-		produto.setRestaurante(restaurante);
-		
-		return produtoRepository.save(produto);
-	}
-	
-	public Produto buscarOuFalhar(Long produtoId, Long restauranteId) {
-		return produtoRepository.findByIdAndRestauranteId(produtoId, restauranteId)
-				.orElseThrow(() -> new ProdutoNaoEncontradoException(produtoId, restauranteId));
-	}
+    public Produto salvar(Produto produto) {
+        return produtoRepository.save(produto);
+    }
+    
+    public Produto buscarOuFalhar(Long restauranteId, Long produtoId) {
+        return produtoRepository.findById(restauranteId, produtoId)
+            .orElseThrow(() -> new ProdutoNaoEncontradoException(restauranteId, produtoId));
+    }
 
 }
