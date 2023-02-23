@@ -5,9 +5,10 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -30,47 +31,52 @@ public class Pedido {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
-	@Column(nullable = false)
 	private BigDecimal subTotal;
-	
-	@Column(nullable = false)
 	private BigDecimal taxaFrete;
-	
-	@Column(nullable = false)
 	private BigDecimal valorTotal;
+
+	@Embedded
+	private Endereco enderecoEntrega;
+	
+	@Enumerated(EnumType.STRING)
+	private StatusPedido status = StatusPedido.CRIADO;
 	
 	@CreationTimestamp
-	@Column(nullable = false, columnDefinition = "datetime")
 	private OffsetDateTime dataCriacao;
-	
-	@Column(columnDefinition = "datetime")
+
 	private OffsetDateTime dataConfirmacao;
-	
-	@Column(columnDefinition = "datetime")
 	private OffsetDateTime dataCancelamento;
-	
-	@Column(columnDefinition = "datetime")
 	private OffsetDateTime dataEntrega;
-	
-	@ManyToOne
-	@JoinColumn(nullable = false)
-	private Restaurante restaurante;
 	
 	@ManyToOne
 	@JoinColumn(nullable = false)
 	private FormaPagamento formaPagamento;
 	
 	@ManyToOne
+	@JoinColumn(nullable = false)
+	private Restaurante restaurante;
+	
+	@ManyToOne
 	@JoinColumn(name = "usuario_cliente_id", nullable = false)
 	private Usuario cliente;
 	
-	@Embedded
-	private Endereco endereco;
-	
-	@JoinColumn(nullable = false)
-	private StatusPedido status;
-	
 	@OneToMany(mappedBy = "pedido")
-	private List<ItemPedido> itens = new ArrayList<>(); 
+	private List<ItemPedido> itens = new ArrayList<>();
+
+	public void calcularValorTotal() {
+		this.subTotal = getItens().stream()
+			.map(item -> item.getPrecoTotal())
+			.reduce(BigDecimal.ZERO, BigDecimal::add);
+		
+		this.valorTotal = this.subTotal.add(this.taxaFrete);
+	}
+	
+	public void definirFrete() {
+		setTaxaFrete(getRestaurante().getTaxaFrete());
+	}
+	
+	public void atribuirPedidoAosItens() {
+		getItens().forEach(item -> item.setPedido(this));
+	}
 
 }
