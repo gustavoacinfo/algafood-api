@@ -5,9 +5,13 @@ import java.io.InputStream;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.algaworks.algafood.domain.exception.EntidadeEmUsoException;
+import com.algaworks.algafood.domain.exception.EstadoNaoEncontradoException;
 import com.algaworks.algafood.domain.exception.FotoProdutoNaoEncontradaException;
 import com.algaworks.algafood.domain.model.FotoProduto;
 import com.algaworks.algafood.domain.repository.ProdutoRepository;
@@ -54,6 +58,17 @@ public class CatalogoFotoProdutoService {
 		return foto;
 		
 	}
+	
+	@Transactional
+	public void excluir(Long restauranteId, Long produtoId) {
+	    FotoProduto foto = buscarOuFalhar(restauranteId, produtoId);
+	    
+	    produtoRepository.delete(foto);
+	    produtoRepository.flush();
+
+	    fotoStorage.remover(foto.getNomeArquivo());
+	}
+	
 	
 	public FotoProduto buscarOuFalhar(Long restauranteId, Long produtoId) {
 		return produtoRepository.findFotoById(restauranteId, produtoId)
