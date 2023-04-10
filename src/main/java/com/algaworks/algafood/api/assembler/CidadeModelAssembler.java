@@ -25,5 +25,7 @@ public class CidadeModelAssembler {
 				.map(cidade -> toModel(cidade))
 				.collect(Collectors.toList());
 	}
+	
+	
 
 }
