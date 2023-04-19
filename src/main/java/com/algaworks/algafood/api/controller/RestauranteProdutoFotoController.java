@@ -31,6 +31,8 @@ import com.algaworks.algafood.domain.model.Produto;
 import com.algaworks.algafood.domain.service.CadastroProdutoService;
 import com.algaworks.algafood.domain.service.CatalogoFotoProdutoService;
 import com.algaworks.algafood.domain.service.FotoStorageService;
+import com.algaworks.algafood.domain.service.FotoStorageService.FotoRecuperada;
+import com.google.common.net.HttpHeaders;
 
 @RestController
 @RequestMapping("/restaurantes/{restauranteId}/produtos/{produtoId}/foto")
@@ -89,11 +91,19 @@ public class RestauranteProdutoFotoController {
 			
 			verificarCompatibilidadeMediaType(mediaTypeFoto, mediaTypesAceitas);
 			
-			InputStream inputStream = fotoStorage.recuperar(fotoProduto.getNomeArquivo());
-		
-			return ResponseEntity.ok()
+			FotoRecuperada fotoRecuperada = fotoStorage.recuperar(fotoProduto.getNomeArquivo());
+			
+			if(fotoRecuperada.temUrl()) {
+				return ResponseEntity
+						.status(HttpStatus.FOUND)
+						.header(HttpHeaders.LOCATION, fotoRecuperada.getUrl())
+						.build();
+			} else {
+				return ResponseEntity.ok()
 					.contentType(mediaTypeFoto)
-					.body(new InputStreamResource(inputStream));
+					.body(new InputStreamResource(fotoRecuperada.getInputStream()));
+			}
+			
 		} catch (EntidadeNaoEncontradaException e) {
 			return ResponseEntity.notFound().build();
 		}
